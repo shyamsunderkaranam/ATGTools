@@ -23,14 +23,8 @@ import java.util.stream.Collectors;
 public class HealthCheckATG {
 
     Logger logger = LoggerFactory.getLogger(HealthCheckATG.class);
-    private JSONObject envJSONObject, personaJSONObject;
-    private static final String ATG_ENV_STATS_FILE = "EnvData/Atg_Env_State.json";
-    private static final String ATG_ENV_STATS_ERR_FILE = "EnvData/Atg_Env_Err_State.json";
-    private static final String ATG_ENV_CONFIG_FILE="config/tier_envs.json";
+
     private static final int CONN_TIME_OUT = 3000;
-    private EnvDataDAO envData;
-    private String tierName;
-    List<JSONObject> agtSilos,backOfc,stfSilos,genLinks;
     @Autowired
     PrepareATGLinksService prepareATGLinksService;
 
@@ -51,47 +45,6 @@ public class HealthCheckATG {
                         .collect(Collectors.toList());
         logger.info("End Time: "+ LocalDateTime.now());
         return result;
-    }
-
-    @Async
-    public List<JSONObject> getURLAvailability (List<JSONObject> urlList ){
-
-
-        List<JSONObject> tempList = urlList
-                //.parallelStream()
-                .parallelStream()
-                .map(this::getResponseCodeForURL)
-                //.parallel()
-                .collect(Collectors.toList());
-
-
-        return tempList;
-
-     }
-    public JSONObject getResponseCodeForURL(JSONObject envJSONObject)  {
-        int responsecode = 0 ;
-        JSONObject env = envJSONObject;
-        try {
-
-            logger.info(Thread.currentThread().getName()+" For  "+env);
-            final URL url = new URL(envJSONObject.get("Link").toString());
-            String requestMethod = "HEAD";
-            HttpURLConnection.setFollowRedirects(true);
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setRequestMethod(requestMethod);
-
-            huc.setConnectTimeout(CONN_TIME_OUT);
-            huc.setReadTimeout(CONN_TIME_OUT);
-
-            huc.connect();
-            responsecode = huc.getResponseCode();
-
-
-        }catch(Exception e) {
-            //e.printStackTrace();
-        }
-        env.put("State", responsecode);
-        return env;
     }
 
     public CompletableFuture<JSONObject> getResponseCodeForURLAsync(JSONObject envJSONObject)  {
