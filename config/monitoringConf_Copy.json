@@ -1,0 +1,9 @@
+[
+{
+"envCheckInterval":120000,
+"envCommInterval":120000,
+"commDL":"karanamshyam.sunder@kingfisher.com",
+"commSubject":"ATG Environment Status at ",
+"commBody":"Please find below ATG environments in Error State and take action accordingly. Ignore if Already taken."
+}
+]

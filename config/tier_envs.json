@@ -1,0 +1,327 @@
+[
+  {
+    "tiers": [
+      {
+        "tier": "V",
+        "envs": [
+          {
+            "environments": "B&Q PVT",
+            "envId": "pvtbquk",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "B&Q",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 13,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "https://pvt11-agent.diy.com/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "https://pvt11-storefront.diy.com/",
+            "tradepoint": "http://pvt11-storefront.trade-point.co.uk"
+          },
+          {
+            "environments": "CASTO PVT",
+            "envId": "pvtcafr",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "CAFR",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 13,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "https://pvt11-agent.castorama.fr/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "https://pvt11-storefront.castorama.fr",
+            "tradepoint": "NA"
+          },
+          {
+            "environments": "BDFR PVT",
+            "envId": "pvtbdfr",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "BDFR",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 13,
+            "excludeHealthCheck":"Y",
+            "excludeSMSCheck":"Y",
+            "agentLB": "http://pvt11-agent.bricodepot.fr/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "http://pvt11-storefront.bricodepot.fr",
+            "tradepoint": "NA"
+          },
+          {
+            "environments": "CAPL PVT",
+            "envId": "pvtcapl",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "CAPL",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 6,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "http://pvt11-agent.castorama.pl/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "http://pvt11-storefront.castorama.pl",
+            "tradepoint": "NA"
+          }
+        ]
+      },
+      {
+        "tier": "Q",
+        "envs": [
+          {
+            "environments": "B&Q PFT",
+            "envId": "pftbquk",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "B&Q",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 13,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "https://pft-agent.uk.b-and-q.com/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "https://pft-storefront.diy.com/",
+            "tradepoint": "https://pft-storefront.trade-point.co.uk"
+          },
+          {
+            "environments": "CASTO PFT",
+            "envId": "pftcafr",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "CAFR",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 13,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "https://pft11-agent.castorama.fr/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "https://pft11-storefront.castorama.fr",
+            "tradepoint": "NA"
+          },
+          {
+            "environments": "BDFR PFT",
+            "envId": "pftbdfr",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "BDFR",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 8,
+            "excludeHealthCheck":"Y",
+            "excludeSMSCheck":"Y",
+            "agentLB": "https://pft11-agent.bricodepot.fr/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "http://pft11-storefront.bricodepot.fr",
+            "tradepoint": "NA"
+          },
+          {
+            "environments": "CAPL PFT",
+            "envId": "pftcapl",
+            "postString": ".ghanp.kfplc.com",
+            "opco": "CAPL",
+            "hosted": "ndc",
+            "aws": "N",
+            "atg11": "Y",
+            "agentsilos": 6,
+            "excludeHealthCheck":"Y",
+            "excludeSMSCheck":"Y",
+            "agentLB": "https://pft11-agent.castorama.pl/agent-front/",
+            "agentPersona": "app",
+            "DIYLB": "https://pft11-storefront.castorama.pl/",
+            "tradepoint": "NA"
+          }
+        ]
+      },
+      {
+        "tier": "F",
+        "envs": [
+          {
+            "environments": "B&Q F TIER",
+            "envId": "sitbquk",
+            "postString": ".aws.ghanp.kfplc.com",
+            "opco": "B&Q",
+            "hosted": "aws",
+            "aws": "Y",
+            "atg11": "Y",
+            "agentsilos": 2,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "http://sitbquk-afa.aws.ghanp.kfplc.com/agent-front",
+            "agentPersona": "app",
+            "DIYLB": "http://sitbquk-storefront.aws.ghanp.kfplc.com",
+            "tradepoint": "http://sitbquk-tradepoint.aws.ghanp.kfplc.com/"
+          },
+          {
+            "environments": "Casto F TIER",
+            "envId": "sitcafr",
+            "postString": ".aws.ghanp.kfplc.com",
+            "opco": "CAFR",
+            "hosted": "aws",
+            "aws": "Y",
+            "atg11": "Y",
+            "agentsilos": 2,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "http://sitcafr-afa.aws.ghanp.kfplc.com/agent-front",
+            "agentPersona": "app",
+            "DIYLB": "http://sitcafr-storefront.aws.ghanp.kfplc.com",
+            "tradepoint": "NA"
+          },
+          {
+            "environments": "BRICO F TIER",
+            "envId": "asitbdfr",
+            "postString": ".aws.gha.kfplc.com",
+            "opco": "BDFR",
+            "hosted": "aws",
+            "aws": "Y",
+            "atg11": "Y",
+            "agentsilos": 2,
+            "excludeHealthCheck":"Y",
+            "excludeSMSCheck":"Y",
+            "agentLB": "http://asitbdfr-afa.aws.gha.kfplc.com/agent-front",
+            "agentPersona": "afa",
+            "DIYLB": "http://asitbdfr-storefront.aws.gha.kfplc.com",
+            "tradepoint": "NA"
+          },
+          {
+            "environments": "CAPL F TIER",
+            "envId": "sitcapl",
+            "postString": ".aws.ghanp.kfplc.com",
+            "opco": "CAPL",
+            "hosted": "aws",
+            "aws": "Y",
+            "atg11": "Y",
+            "agentsilos": 2,
+            "excludeHealthCheck":"N",
+            "excludeSMSCheck":"N",
+            "agentLB": "http://sitcapl-afa.aws.ghanp.kfplc.com/agent-front",
+            "agentPersona": "app",
+            "DIYLB": "http://sitcapl-storefront.aws.ghanp.kfplc.com",
+            "tradepoint": "NA"
+          }
+        ]
+      },
+      {
+        "tier": "H",
+        "envs": [
+          {
+            "environments": "B&Q H TIER",
+            "envId": "ahftbquk",
+            "postString": ".aws.ghanp.kfplc.com",
+            "opco": "B&Q",
+            "hosted": "aws",
+            "aws": "Y",
+            "atg11": "Y",
+            "agentsilos": 2,
+            "excludeHealthCheck":"Y",
+            "excludeSMSCheck":"Y",
+			"agentLB": "http://ahftbquk-afa.aws.ghanp.kfplc.com/agent-front",
+            "agentPersona": "app",
+            "DIYLB": "http://ahftbquk-storefront.aws.ghanp.kfplc.com",
+            "tradepoint": "http://ahftbquk-tradepoint.aws.ghanp.kfplc.com/"
+          },
+          {
+            "environments": "Casto H TIER",
+            "envId": "ahftcafr",
+            "postString": ".aws.ghanp.kfplc.com",
+            "opco": "CAFR",
+            "hosted": "aws",
+            "aws": "Y",
+            "atg11": "Y",
+            "agentsilos": 2,
+            "excludeHealthCheck":"Y",
+            "excludeSMSCheck":"Y",
+			
+			"agentLB": "http://ahftcafr-afa.aws.ghanp.kfplc.com/agent-front",
+            "agentPersona": "app",
+            "DIYLB": "http://ahftcafr-storefront.aws.ghanp.kfplc.com",
+            "tradepoint": "NA"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "personas": [
+      {
+        "persona": "Agent",
+        "persId": "app",
+        "isDynAdmin":"Y",
+        "port": 8030
+      },
+      {
+        "persona": "storefront",
+        "persId": "app",
+        "isDynAdmin":"Y",
+        "port": 8080
+      },
+      {
+        "persona": "fulfillment",
+        "persId": "ful01",
+        "isDynAdmin":"Y",
+        "port": 8040
+      },
+      {
+        "persona": "publish",
+        "persId": "pub01",
+        "isDynAdmin":"Y",
+        "port": 8070
+      },
+      {
+        "persona": "AuxStorefront",
+        "persId": "aux01",
+        "isDynAdmin":"Y",
+        "port": 8050
+      },
+      {
+        "persona": "AuxAgent",
+        "persId": "aux02",
+        "isDynAdmin":"Y",
+        "port": 8090
+      },
+	  {
+        "persona": "StagingAgent",
+        "persId": "stg01",
+        "isDynAdmin":"Y",
+        "port": 8100
+      },
+	  {
+        "persona": "Staging",
+        "persId": "stg01",
+        "isDynAdmin":"Y",
+        "port": 8060
+      },
+      {
+        "persona": "AgentLB",
+        "persId": "agentLB",
+        "isDynAdmin":"N",
+        "port": 8090
+      },
+      {
+        "persona": "storefrontLB",
+        "persId": "storefrontLB",
+        "isDynAdmin":"N",
+        "port": 8090
+      },
+      {
+        "persona": "Tradepoint",
+        "persId": "Tradepoint",
+        "isDynAdmin":"N",
+        "port": 8090
+      },
+      {
+        "persona": "atgbcc",
+        "persId": "aux02",
+        "isDynAdmin":"N",
+        "port": 8090
+      }
+    ]
+  }
+]

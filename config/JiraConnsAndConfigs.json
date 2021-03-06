@@ -1,0 +1,12 @@
+[
+{
+"userName":"sundek01",
+"kuchbhi":"9kjdnytsndNsvdjho0b",
+"key":"653216vkjfjv03336@1m",
+"jiraURL":"https://jira.kfplc.com",
+"jqlQueryForNewTickets":"project = PPS and status = New ORDER BY createdDate DESC",
+"jqlQueryForMSR":"project = PPS AND labels in (EDT, RES) AND created >= 2019-10-01 AND created <= 2019-11-01",
+"jqlQueryForAgedTkts":"project = PPS AND status in (New, Reopened, \"In QA\", \"Test Review\", \"In Progress\", \"Ready for Analysis\", \"On Hold\", \"3rd Party - Pending\")",
+"msrExcelFileName":"MSRSpreadsheet.xlsx"
+}
+]
