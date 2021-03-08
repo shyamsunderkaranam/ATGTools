@@ -1,21 +1,20 @@
 package com.atg.atgtools.services;
 
+import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import org.json.simple.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class SmsFeatureToggleCheck {
@@ -40,7 +39,7 @@ public class SmsFeatureToggleCheck {
 				try {
 					doc = Jsoup.connect(url).get();
 
-					//Element content = doc.getElementById("content");
+
 					Elements content = doc.getElementsByAttributeValueMatching("style", "white-space:pre") ;
 					logger.info(Thread.currentThread().getName() + " For url "+url+" Value: "+content.html());
 					recordState.put("SMSFTValue",content.html());
