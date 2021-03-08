@@ -32,7 +32,7 @@ public class HealthCheckATG {
     public List<JSONObject> getAllATGEnvUrls(String tierNames) {
 
         logger.info(Thread.currentThread().getName()+" Preparing the ATG environment links now");
-        List<JSONObject> envLinks = prepareATGLinksService.getAllATGEnvUrls("All");
+        List<JSONObject> envLinks = prepareATGLinksService.getAllATGEnvUrls(tierNames);
         logger.info(Thread.currentThread().getName() + " Now checking all ATG URLs health");
         List<CompletableFuture<JSONObject>> futures =
                 envLinks.stream()
