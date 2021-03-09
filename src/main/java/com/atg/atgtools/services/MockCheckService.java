@@ -26,6 +26,8 @@ public class MockCheckService {
     @Autowired
     PrepareATGLinksService prepareATGLinksService;
 
+    private final String MOCKURLPATH = "/nucleus//kf/commerce/mocks/MockConfiguration/";
+
     Logger logger = LoggerFactory.getLogger(MockCheckService.class);
     public CompletableFuture<JSONObject> getMockValueForATGEnv(JSONObject envDetails){
 
@@ -37,7 +39,7 @@ public class MockCheckService {
             Document doc;
             try {
                 //String url="http://atg-pvtbquk-ndc-app02.ghanp.kfplc.com:8030/dyn/admin/nucleus//kf/commerce/mocks/MockConfiguration/";
-                url= url.concat("/nucleus//kf/commerce/mocks/MockConfiguration/");
+                url= url.concat(MOCKURLPATH);
                 doc = Jsoup.connect(url).get();
                 Element table = doc.select("table").get(0); //select the first table.
                 Elements rows = table.select("tr");

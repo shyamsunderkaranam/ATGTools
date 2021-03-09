@@ -1,5 +1,6 @@
 package com.atg.atgtools.controllers;
 
+import com.atg.atgtools.services.EmailDummyModeCheckService;
 import com.atg.atgtools.services.HealthCheckATG;
 import com.atg.atgtools.services.MockCheckService;
 import com.atg.atgtools.services.SmsFeatureToggleCheck;
@@ -29,6 +30,9 @@ public class ATGToolsController {
 	@Autowired
 	MockCheckService mockCheckService;
 
+	@Autowired
+	EmailDummyModeCheckService emailDummyModeCheckService;
+
 	StopWatch stopWatch= StopWatch.create();
 
 	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
@@ -52,6 +56,26 @@ public class ATGToolsController {
 		logger.info("Start Time: "+ LocalDateTime.now());
 		stopWatch.start();
 		List<JSONObject> tempList=  healthCheckATG.getAllATGEnvUrls(tier);
+		stopWatch.stop();
+		logger.info("Total time taken: "+stopWatch.toString());
+		stopWatch.reset();
+		return ResponseEntity.ok(tempList);
+	}
+
+	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
+	@RequestMapping(value = {"/dummyMode","/dummyMode/{tierName}"}, method = RequestMethod.GET)
+	public ResponseEntity<List<JSONObject>> getATGEmailDummyModeCheck(@PathVariable(value = "tierName",required = false) String tierName) {
+		String tier = "All";
+		if(tierName==null || tierName.equals(null) || tierName.equals("")){
+			tier = "All";
+			logger.info("Not passed any tier parameter / not populated properly");}
+		else
+			tier = tierName.toString();
+
+		logger.info("Before the generateEmailDummyModeValues call");
+		logger.info("Start Time: "+ LocalDateTime.now());
+		stopWatch.start();
+		List<JSONObject> tempList=  emailDummyModeCheckService.generateEmailDummyModeValues(tier);
 		stopWatch.stop();
 		logger.info("Total time taken: "+stopWatch.toString());
 		stopWatch.reset();

@@ -24,9 +24,7 @@ public class SmsFeatureToggleCheck {
 	@Autowired
 	PrepareATGLinksService prepareATGLinksService;
 	Logger logger = LoggerFactory.getLogger(SmsFeatureToggleCheck.class);
-	public SmsFeatureToggleCheck() {
-		
-	}
+
 	public CompletableFuture<JSONObject> getSMSFeatureToggleValue(JSONObject envJSONObject) {
 
 		CompletableFuture<JSONObject> future = CompletableFuture.supplyAsync(new Supplier<JSONObject>() {
