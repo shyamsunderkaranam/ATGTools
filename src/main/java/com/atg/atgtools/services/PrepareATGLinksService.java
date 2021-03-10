@@ -144,13 +144,14 @@ public class PrepareATGLinksService {
         Stream stream = atgenvs.stream().map(obj -> (JSONObject) obj);
 
 
-        List<JSONObject> tempJSONObject = new ArrayList<JSONObject>();
+
         List<List> tempListObject=  ((Stream<JSONObject>) stream)
         .filter(envt -> ("N".equalsIgnoreCase(envt.get("excludeHealthCheck").toString())))
                 .map(atgenvt -> createPersonaDetailsFromEnv(atgenvt))
                 .parallel()
                 .collect(Collectors.toList())
                ;
+        List<JSONObject> tempJSONObject = new ArrayList<JSONObject>();
         tempListObject.stream()
                 .forEach(tempList -> {
                     tempJSONObject.addAll(tempList);
@@ -240,4 +241,5 @@ public class PrepareATGLinksService {
     }
 
  */
+
 }

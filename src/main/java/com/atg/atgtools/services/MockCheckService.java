@@ -110,4 +110,7 @@ public class MockCheckService {
 
         return result;
     }
+    public List<JSONObject> getData(List<JSONObject> envLinks){
+        return getMockValues("All");
+    }
 }

@@ -90,4 +90,7 @@ public class EmailDummyModeCheckService {
         return result;
     }
 
+    public List<JSONObject> getData(List<JSONObject> envLinks){
+        return generateEmailDummyModeValues("All");
+    }
 }

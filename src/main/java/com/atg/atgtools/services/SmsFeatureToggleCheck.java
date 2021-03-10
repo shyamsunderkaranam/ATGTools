@@ -90,4 +90,8 @@ public class SmsFeatureToggleCheck {
 		return result;
 	}
 
+	public List<JSONObject> getData(List<JSONObject> envLinks){
+		return generateSMSFeatureToggleValues("All");
+	}
+
 }
