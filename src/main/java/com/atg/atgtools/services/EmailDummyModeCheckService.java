@@ -30,7 +30,7 @@ public class EmailDummyModeCheckService {
             @Override
             public JSONObject get() {
                 String url = envJSONObject.get("Link").toString().concat(EMAIL_DUMMY_MODE_PROP) ;
-                JSONObject recordState = envJSONObject;
+                JSONObject recordState = new JSONObject(envJSONObject);
                 recordState.put("Link",url);
 
                 Document doc;
@@ -90,7 +90,23 @@ public class EmailDummyModeCheckService {
         return result;
     }
 
+    public List<JSONObject> generateEmailDummyModeValues(List<JSONObject> envLinks) {
+        logger.info(Thread.currentThread().getName() + " Now checking all ATG URLs health");
+        List<CompletableFuture<JSONObject>> futures =
+                envLinks.stream()
+                        .filter(envObj -> envObj.get("Link").toString().contains("/dyn/admin"))
+                        .map(this::getEmailDummyModeValue)
+                        .collect(Collectors.toList());
+
+        List<JSONObject> result =
+                futures.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList());
+            logger.info("End Time: "+ LocalDateTime.now());
+            return result;
+    }
     public List<JSONObject> getData(List<JSONObject> envLinks){
-        return generateEmailDummyModeValues("All");
+
+        return generateEmailDummyModeValues(envLinks);
     }
 }

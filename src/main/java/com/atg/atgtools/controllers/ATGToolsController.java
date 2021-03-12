@@ -1,9 +1,6 @@
 package com.atg.atgtools.controllers;
 
-import com.atg.atgtools.services.EmailDummyModeCheckService;
-import com.atg.atgtools.services.HealthCheckATG;
-import com.atg.atgtools.services.MockCheckService;
-import com.atg.atgtools.services.SmsFeatureToggleCheck;
+import com.atg.atgtools.services.*;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +29,9 @@ public class ATGToolsController {
 
 	@Autowired
 	EmailDummyModeCheckService emailDummyModeCheckService;
+
+	@Autowired
+	ParallelCallOfSmsMockEmail parallelCallOfSmsMockEmail;
 
 	StopWatch stopWatch= StopWatch.create();
 
@@ -101,6 +101,7 @@ public class ATGToolsController {
 		return ResponseEntity.ok(tempList);
 	}
 
+	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
 	@RequestMapping(value = {"/atgMockValues","/atgMockValues/{tierName}"}, method = RequestMethod.GET)
 	public ResponseEntity<List<JSONObject>> getMockValues(@PathVariable(value = "tierName",required = false) String tierName) {
 		String tier = "All";
@@ -113,6 +114,21 @@ public class ATGToolsController {
 		stopWatch.start();
 		logger.info("Start Time: "+ LocalDateTime.now());
 		List<JSONObject> tempList= mockCheckService.getMockValues(tier);
+		stopWatch.stop();
+		logger.info("Total time taken: "+stopWatch.toString());
+		stopWatch.reset();
+		return ResponseEntity.ok(tempList);
+	}
+
+	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
+	@RequestMapping(value = {"/allData"}, method = RequestMethod.GET)
+	public ResponseEntity<List<JSONObject>> getAllData() {
+		String tier = "All";
+
+		logger.info("Before the getting all stats call");
+		stopWatch.start();
+		logger.info("Start Time: "+ LocalDateTime.now());
+		List<JSONObject> tempList= parallelCallOfSmsMockEmail.parallelCall();
 		stopWatch.stop();
 		logger.info("Total time taken: "+stopWatch.toString());
 		stopWatch.reset();

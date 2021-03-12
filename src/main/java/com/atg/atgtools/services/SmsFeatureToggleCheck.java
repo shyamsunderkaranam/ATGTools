@@ -31,7 +31,7 @@ public class SmsFeatureToggleCheck {
 			@Override
 			public JSONObject get() {
 				String url = envJSONObject.get("Link").toString().concat(SMSFEATURETOGGLEPATH) ;
-				JSONObject recordState = envJSONObject;
+				JSONObject recordState = new JSONObject(envJSONObject);
 
 				Document doc;
 				try {
@@ -41,6 +41,7 @@ public class SmsFeatureToggleCheck {
 					Elements content = doc.getElementsByAttributeValueMatching("style", "white-space:pre") ;
 					logger.info(Thread.currentThread().getName() + " For url "+url+" Value: "+content.html());
 					recordState.put("SMSFTValue",content.html());
+					recordState.put("Link",url);
 					recordState.remove("State");
 
 
@@ -48,7 +49,8 @@ public class SmsFeatureToggleCheck {
 					// TODO Auto-generated catch block
 					logger.info(Thread.currentThread().getName() + " For url "+url+" Value: Unable to connect");
 					//e.printStackTrace();
-					recordState.put("SMSFTValue","error");
+					recordState.put("SMSFTValue","ERROR");
+					recordState.put("Link",url);
 					recordState.remove("State");
 
 				}
@@ -90,8 +92,27 @@ public class SmsFeatureToggleCheck {
 		return result;
 	}
 
+	public List<JSONObject> generateSMSFeatureToggleValues(List<JSONObject> envLinks) {
+
+
+		logger.info(Thread.currentThread().getName() + " Now checking all ATG URLs health");
+		List<CompletableFuture<JSONObject>> futures =
+				envLinks.stream()
+						.filter(envObj -> envObj.get("Link").toString().contains("/dyn/admin"))
+						.map(this::getSMSFeatureToggleValue)
+						.collect(Collectors.toList());
+
+		List<JSONObject> result =
+				futures.stream()
+						.map(CompletableFuture::join)
+						.collect(Collectors.toList());
+		logger.info("End Time: "+ LocalDateTime.now());
+		return result;
+	}
+
 	public List<JSONObject> getData(List<JSONObject> envLinks){
-		return generateSMSFeatureToggleValues("All");
+
+		return generateSMSFeatureToggleValues(envLinks);
 	}
 
 }

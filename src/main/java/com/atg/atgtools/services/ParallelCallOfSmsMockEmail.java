@@ -29,35 +29,51 @@ public class ParallelCallOfSmsMockEmail {
 
     public List<JSONObject> parallelCall(){
 
-        List<Object> pList = new ArrayList(Arrays.asList(smsFeatureToggleCheck, mockCheckService,emailDummyModeCheckService));
 
-        List<List<JSONObject>> tempList = pList.stream()
+
+        List<Object> pList = new ArrayList(Arrays.asList(smsFeatureToggleCheck, mockCheckService,emailDummyModeCheckService));
+        List<JSONObject> atgLinks = prepareATGLinksService.getAllATGEnvUrls("All");
+        //List<List<JSONObject>> tempList
+        List<JSONObject> tempJSONObject
+                = pList.parallelStream()
         .map(obj ->
         {
-            List<JSONObject> atgLinks = prepareATGLinksService.getAllATGEnvUrls("All");
+
             if(obj instanceof SmsFeatureToggleCheck) {
                 SmsFeatureToggleCheck tmpObj = (SmsFeatureToggleCheck) obj;
-                return tmpObj.getData(atgLinks);
+                JSONObject tmp = new JSONObject();
+                tmp.put("SmsFeatureToggleValues",tmpObj.getData(atgLinks));
+                return tmp;
             }
             else if(obj instanceof MockCheckService){
-                SmsFeatureToggleCheck tmpObj = (SmsFeatureToggleCheck) obj;
-                return tmpObj.getData(atgLinks);
+                MockCheckService tmpObj = (MockCheckService) obj;
+                JSONObject tmp = new JSONObject();
+                tmp.put("MockValues",tmpObj.getData(atgLinks));
+                return tmp;
             }
             else if(obj instanceof EmailDummyModeCheckService){
-                SmsFeatureToggleCheck tmpObj = (SmsFeatureToggleCheck) obj;
-                return tmpObj.getData(atgLinks);
+                EmailDummyModeCheckService tmpObj = (EmailDummyModeCheckService) obj;
+                JSONObject tmp = new JSONObject();
+                tmp.put("EmailDummyModeValues",tmpObj.getData(atgLinks));
+                return tmp;
             }
 
             return null;
 
         })
                 .collect(Collectors.toList());
+        /*
         List<JSONObject> tempJSONObject = new ArrayList<JSONObject>();
         tempList.stream()
                 .forEach(tmpList -> {
                     tempJSONObject.addAll(tmpList);
-                });
+                });*/
+
+
+
         return tempJSONObject;
+
+
 
     }
 }

@@ -34,7 +34,7 @@ public class MockCheckService {
         CompletableFuture<JSONObject> future = CompletableFuture.supplyAsync(new Supplier<JSONObject>() {
         @Override
         public JSONObject get() {
-            JSONObject mockJSONObject = envDetails;
+            JSONObject mockJSONObject = new JSONObject(envDetails);
             String url = mockJSONObject.get("Link").toString();
             Document doc;
             try {
@@ -67,12 +67,13 @@ public class MockCheckService {
 
                 }
 
-                mockJSONObject.put("state", 200);
+                mockJSONObject.put("State", 200);
                 mockJSONObject.put("mocks",mockJSONArray);
 
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                mockJSONObject.put("state", 500);
+                mockJSONObject.put("State", 500);
+                mockJSONObject.put("mocks","ERROR");
                 //e.printStackTrace();
                 logger.info("URL: {} - Unable to connect OR URL Not reachable", url);
                 //return "error";
@@ -110,7 +111,28 @@ public class MockCheckService {
 
         return result;
     }
+
+    public List<JSONObject> getMockValues(List<JSONObject> envLinks){
+
+        logger.info(Thread.currentThread().getName() + " Now checking all ATG Environments Mock");
+        List<CompletableFuture<JSONObject>> futures =
+                envLinks.stream()
+                        .filter(envObj -> envObj.get("Link").toString().contains("/dyn/admin") &&
+                                envObj.get("Link").toString().contains("app01") &&
+                                envObj.get("Link").toString().contains("8030"))
+                        .map(this::getMockValueForATGEnv)
+                        .collect(Collectors.toList());
+
+        List<JSONObject> result =
+                futures.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList());
+        logger.info("End Time: "+ LocalDateTime.now());
+
+        return result;
+    }
     public List<JSONObject> getData(List<JSONObject> envLinks){
-        return getMockValues("All");
+
+        return getMockValues(envLinks);
     }
 }
