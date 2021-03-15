@@ -122,13 +122,13 @@ public class ATGToolsController {
 
 	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
 	@RequestMapping(value = {"/allData"}, method = RequestMethod.GET)
-	public ResponseEntity<List<JSONObject>> getAllData() {
+	public ResponseEntity<JSONObject> getAllData() {
 		String tier = "All";
 
 		logger.info("Before the getting all stats call");
 		stopWatch.start();
 		logger.info("Start Time: "+ LocalDateTime.now());
-		List<JSONObject> tempList= parallelCallOfSmsMockEmail.parallelCall();
+		JSONObject tempList= parallelCallOfSmsMockEmail.parallelCall();
 		stopWatch.stop();
 		logger.info("Total time taken: "+stopWatch.toString());
 		stopWatch.reset();

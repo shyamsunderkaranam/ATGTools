@@ -27,41 +27,50 @@ public class ParallelCallOfSmsMockEmail {
     PrepareATGLinksService prepareATGLinksService;
 
 
-    public List<JSONObject> parallelCall(){
-
+    //public List<JSONObject> parallelCall(){
+    public JSONObject parallelCall(){
 
 
         List<Object> pList = new ArrayList(Arrays.asList(smsFeatureToggleCheck, mockCheckService,emailDummyModeCheckService));
         List<JSONObject> atgLinks = prepareATGLinksService.getAllATGEnvUrls("All");
         //List<List<JSONObject>> tempList
-        List<JSONObject> tempJSONObject
-                = pList.parallelStream()
+        //List<JSONObject> tempJSONObject
+        JSONObject tempJSONObject = new JSONObject();
+        tempJSONObject.put("SmsFeatureToggleValues",smsFeatureToggleCheck.getData(atgLinks));
+        tempJSONObject.put("MockValues",mockCheckService.getData(atgLinks));
+        tempJSONObject.put("EmailDummyModeValues",emailDummyModeCheckService.getData(atgLinks));
+/*
+                pList.stream()
         .map(obj ->
         {
 
             if(obj instanceof SmsFeatureToggleCheck) {
                 SmsFeatureToggleCheck tmpObj = (SmsFeatureToggleCheck) obj;
-                JSONObject tmp = new JSONObject();
-                tmp.put("SmsFeatureToggleValues",tmpObj.getData(atgLinks));
-                return tmp;
+                //JSONObject tmp = new JSONObject();
+                //tmp.put("SmsFeatureToggleValues",tmpObj.getData(atgLinks));
+                tempJSONObject.put("SmsFeatureToggleValues",tmpObj.getData(atgLinks));
+                //return tmp;
             }
             else if(obj instanceof MockCheckService){
                 MockCheckService tmpObj = (MockCheckService) obj;
-                JSONObject tmp = new JSONObject();
-                tmp.put("MockValues",tmpObj.getData(atgLinks));
-                return tmp;
+                //JSONObject tmp = new JSONObject();
+                tempJSONObject.put("MockValues",tmpObj.getData(atgLinks));
+                //return tmp;
             }
             else if(obj instanceof EmailDummyModeCheckService){
                 EmailDummyModeCheckService tmpObj = (EmailDummyModeCheckService) obj;
-                JSONObject tmp = new JSONObject();
-                tmp.put("EmailDummyModeValues",tmpObj.getData(atgLinks));
-                return tmp;
+                //JSONObject tmp = new JSONObject();
+                tempJSONObject.put("EmailDummyModeValues",tmpObj.getData(atgLinks));
+                //return tmp;
             }
 
             return null;
 
         })
-                .collect(Collectors.toList());
+                        ;
+
+ */
+               // .collect(Collectors.toList());
         /*
         List<JSONObject> tempJSONObject = new ArrayList<JSONObject>();
         tempList.stream()
