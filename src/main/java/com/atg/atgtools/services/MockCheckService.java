@@ -40,11 +40,12 @@ public class MockCheckService {
             try {
                 //String url="http://atg-pvtbquk-ndc-app02.ghanp.kfplc.com:8030/dyn/admin/nucleus//kf/commerce/mocks/MockConfiguration/";
                 url= url.concat(MOCKURLPATH);
+                mockJSONObject.put("Link",url);
                 doc = Jsoup.connect(url).get();
                 Element table = doc.select("table").get(0); //select the first table.
                 Elements rows = table.select("tr");
                 JSONArray mockJSONArray = new JSONArray();
-                mockJSONObject.put("Link",url);
+
 
                 for (int i = 14; i < rows.size(); i++) { //first row is the col names so skip it.
                     JSONObject mockJSONPropObject = new JSONObject();
@@ -75,7 +76,7 @@ public class MockCheckService {
                 mockJSONObject.put("State", 500);
                 mockJSONObject.put("mocks","ERROR");
                 //e.printStackTrace();
-                logger.info("URL: {} - Unable to connect OR URL Not reachable", url);
+                logger.info("Unable to connect OR URL Not reachable. URL: {} ", url);
                 //return "error";
             }
             return mockJSONObject;
