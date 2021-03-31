@@ -32,6 +32,7 @@ public class ParallelCallOfSmsMockEmail {
 
 
         List<Object> pList = new ArrayList(Arrays.asList(smsFeatureToggleCheck, mockCheckService,emailDummyModeCheckService));
+        //List<Object> pList = new ArrayList(Arrays.asList(smsFeatureToggleCheck, emailDummyModeCheckService));
         List<JSONObject> atgLinks = prepareATGLinksService.getAllATGEnvUrls("All");
 
         JSONObject tempJSONObject = new JSONObject();
