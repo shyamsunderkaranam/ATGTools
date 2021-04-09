@@ -42,12 +42,12 @@ public class MockCheckService {
                 url= url.concat(MOCKURLPATH);
                 mockJSONObject.put("Link",url);
                 doc = Jsoup.connect(url).get();
-                Element table = doc.select("table").get(0); //select the first table.
+                Element table = doc.select("table").get(0);
                 Elements rows = table.select("tr");
                 JSONArray mockJSONArray = new JSONArray();
 
 
-                for (int i = 14; i < rows.size(); i++) { //first row is the col names so skip it.
+                for (int i = 14; i < rows.size(); i++) {
                     JSONObject mockJSONPropObject = new JSONObject();
                     Element row = rows.get(i);
                     Elements cols = row.select("td");

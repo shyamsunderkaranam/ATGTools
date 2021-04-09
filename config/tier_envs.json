@@ -323,5 +323,8 @@
         "port": 8090
       }
     ]
+  },
+  {
+    "mocksToBeIncluded": ["mockPaymentGatewayEnabled","mockVerifoneServiceEnabled"]
   }
 ]

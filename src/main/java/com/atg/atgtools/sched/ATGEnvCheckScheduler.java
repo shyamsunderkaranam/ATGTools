@@ -33,7 +33,7 @@ public class ATGEnvCheckScheduler {
 	}
 
 
-	@Scheduled(fixedRate = 300000)
+	//@Scheduled(fixedRate = 300000)
 	  public void reportATGEnvStats() {
 
 	    log.info("The time is {}", dateFormat.format(new Date()));

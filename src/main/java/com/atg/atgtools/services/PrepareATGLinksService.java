@@ -22,8 +22,6 @@ public class PrepareATGLinksService {
 
     Logger logger = LoggerFactory.getLogger(PrepareATGLinksService.class);
     private JSONObject envJSONObject, personaJSONObject;
-    private static final String ATG_ENV_STATS_FILE = "EnvData/Atg_Env_State.json";
-    private static final String ATG_ENV_STATS_ERR_FILE = "EnvData/Atg_Env_Err_State.json";
     private static final String ATG_ENV_CONFIG_FILE="config/tier_envs.json";
     private EnvDataDAO envData;
     private String tierName;
@@ -85,10 +83,10 @@ public class PrepareATGLinksService {
         personaJSONObject = (JSONObject) config.get(1);
         JSONArray tiers = (JSONArray) envJSONObject.get("tiers");
 
-        agtSilos = new ArrayList<>();
+        /*agtSilos = new ArrayList<>();
         backOfc = new ArrayList<>();
         stfSilos = new ArrayList<>();
-        genLinks = new ArrayList<>();
+        genLinks = new ArrayList<>();*/
         Stream stream = tiers.stream()
                 .map(obj ->  {
                     JSONObject tempJsonobj = (JSONObject) obj ;
@@ -130,10 +128,7 @@ public class PrepareATGLinksService {
         JSONArray atgenvs;
 
         logger.info("In createEnvironmentDetailsfromTier ");
-        agtSilos = new ArrayList<>();
-        backOfc = new ArrayList<>();
-        stfSilos = new ArrayList<>();
-        genLinks = new ArrayList<>();
+
         tier = (JSONObject)envTier;
 
 
@@ -194,11 +189,6 @@ public class PrepareATGLinksService {
 
                     envStateJSON.put("Link", desiredLink);
 
-                    if (persona.get("persona").toString().equalsIgnoreCase("storefront"))
-                        stfSilos.add(envStateJSON);
-                    if (persona.get("persona").toString().equalsIgnoreCase("Agent"))
-                        agtSilos.add(envStateJSON);
-
                     envLinks.add(envStateJSON);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -209,8 +199,6 @@ public class PrepareATGLinksService {
             }
         } else if(!(atgenv.get("tradepoint").equals("NA") && persona.get("persId").toString().equalsIgnoreCase("Tradepoint"))) {
 
-            //envStateJSON = new JSONObject();
-            //envStateErrJSON = new JSONObject();
             envStateJSON = new JSONObject();
             envStateJSON.put("tier", tierName);
             envStateJSON.put("environment", atgenv.get("environments").toString());
@@ -221,10 +209,6 @@ public class PrepareATGLinksService {
             envStateJSON.put("Link", desiredLink);
             envStateJSON.put("persona",persona.get("persona").toString());
 
-            if (persona.get("isDynAdmin").toString().equalsIgnoreCase("Y"))
-                backOfc.add(envStateJSON);
-            if (persona.get("isDynAdmin").toString().equalsIgnoreCase("N"))
-                genLinks.add(envStateJSON);
             envLinks.add(envStateJSON);
 
 
