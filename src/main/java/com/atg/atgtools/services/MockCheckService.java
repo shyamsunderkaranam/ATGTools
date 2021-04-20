@@ -1,6 +1,7 @@
 package com.atg.atgtools.services;
 
 
+import com.atg.atgtools.conf.EnvDataDAO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
@@ -25,6 +27,14 @@ public class MockCheckService {
     //https://github.com/thombergs/code-examples/blob/master/spring-boot/spring-boot-logging-2/src/main/resources/application.properties
     @Autowired
     PrepareATGLinksService prepareATGLinksService;
+
+    private static final String ATG_ENV_CONFIG_FILE="config/tier_envs.json";
+    @Autowired
+    private EnvDataDAO envData;
+
+    private JSONObject mockFilter;
+    private List<String> mocksToInclude;
+    private String allowAllMock;
 
     private final String MOCKURLPATH = "/nucleus//kf/commerce/mocks/MockConfiguration/";
 
@@ -54,7 +64,10 @@ public class MockCheckService {
                     String mockProperty, mockValue;
                     mockProperty = cols.get(0).select("a").text();
                     mockValue = cols.get(1).select("span").text();
-                    if (mockProperty.contains("mock")) {
+                    if (mockProperty.contains("mock") &&
+                            (allowAllMock.equalsIgnoreCase("Y") ||
+                                    mocksToInclude.contains(mockProperty)))
+                    {
                         logger.info("URL: {} Mock Property {} : Mock Value {}", url, mockProperty, mockValue);
                         mockJSONPropObject.put("mockKey", mockProperty);
                         mockJSONPropObject.put("mockValue", mockValue);
@@ -62,7 +75,7 @@ public class MockCheckService {
                         mockJSONArray.add(mockJSONPropObject);
 
 
-                    }
+                    } //if (mockProperty.contains("mock") &&
 
                     //System.out.println(mockProperty+" : "+mockValue);
 
@@ -85,16 +98,19 @@ public class MockCheckService {
     });
         return future;
     }
-/*
-    public static void main(String[] args) {
-        MockCheckService m = new MockCheckService();
-        m.checkMock();
-    }
 
- */
     public List<JSONObject> getMockValues(String tierNames){
         logger.info(Thread.currentThread().getName()+" Preparing the ATG environment Mock URLs now");
         List<JSONObject> envLinks = prepareATGLinksService.getAllATGEnvUrls(tierNames);
+        mockFilter = new JSONObject();
+        mocksToInclude = new ArrayList<>();
+        JSONArray config = envData.getData(ATG_ENV_CONFIG_FILE);
+        mockFilter = (JSONObject) config.get(2);
+        mocksToInclude = (List<String>)mockFilter.get("mocksToBeIncluded");
+        allowAllMock = mockFilter.get("allowAllMocks").toString();
+
+        logger.info(Thread.currentThread().getName() + " Currently these mocks are configured : "+mocksToInclude);
+        logger.info(Thread.currentThread().getName() + " Currently All mocks are allowed is : "+allowAllMock);
         logger.info(Thread.currentThread().getName() + " Now checking all ATG Environments Mock");
         List<CompletableFuture<JSONObject>> futures =
                 envLinks.stream()

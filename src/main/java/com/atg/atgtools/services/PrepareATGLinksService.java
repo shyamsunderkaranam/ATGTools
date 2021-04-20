@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scala.util.parsing.json.JSON;
 
@@ -23,9 +24,10 @@ public class PrepareATGLinksService {
     Logger logger = LoggerFactory.getLogger(PrepareATGLinksService.class);
     private JSONObject envJSONObject, personaJSONObject;
     private static final String ATG_ENV_CONFIG_FILE="config/tier_envs.json";
+    @Autowired
     private EnvDataDAO envData;
     private String tierName;
-    List<JSONObject> agtSilos,backOfc,stfSilos,genLinks;
+    //List<JSONObject> agtSilos,backOfc,stfSilos,genLinks;
 
     public String getDesiredLink(JSONObject env, JSONObject persona, String siloNumber) {
 
@@ -77,7 +79,7 @@ public class PrepareATGLinksService {
     public List<JSONObject> getAllATGEnvUrls(String tierNames) {
 
         logger.info(Thread.currentThread().getName()+" Preparing the ATG environment links now");
-        envData = new EnvDataDAO();
+        //envData = new EnvDataDAO();
         JSONArray config = envData.getData(ATG_ENV_CONFIG_FILE);
         envJSONObject = (JSONObject) config.get(0);
         personaJSONObject = (JSONObject) config.get(1);
