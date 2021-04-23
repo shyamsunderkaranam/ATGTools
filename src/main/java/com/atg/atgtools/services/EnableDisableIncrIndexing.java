@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class EnableDisableIncrIndexing {
 
-    public Response toggleEnableDisableIncrIndexing(String environmentName){
+    public Response toggleEnableDisableIncrIndexing(String environmentName, String enabled){
         Response response = null;
         try{
 
             OkHttpClient client = new OkHttpClient();
             MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-            RequestBody body = RequestBody.create(mediaType, "newValue=false&submit=change");
+            RequestBody body = RequestBody.create(mediaType, "newValue="+enabled+"&submit=change");
             Request request = new Request.Builder()
                     .url("http://atg-pvtcapl-ndc-aux01.ghanp.kfplc.com:8050/dyn/admin/nucleus/atg/userprofiling/textsearch/schedule/ProfileIncrementalScheduleConfig/?propertyName=enabled")
                     .method("POST", body)
@@ -29,7 +29,7 @@ public class EnableDisableIncrIndexing {
 
     public static void main(String[] args) {
         EnableDisableIncrIndexing enableDisableIncrIndexing = new EnableDisableIncrIndexing();
-        System.out.println(enableDisableIncrIndexing.toggleEnableDisableIncrIndexing("Something"));
+        System.out.println(enableDisableIncrIndexing.toggleEnableDisableIncrIndexing("Something","false"));
     }
 
 }
