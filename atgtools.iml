@@ -64,6 +64,8 @@
     <orderEntry type="library" name="Maven: io.netty:netty-handler-proxy:4.1.58.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec-socks:4.1.58.Final" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webflux:5.3.3" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp:2.7.5" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.6.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.springframework.boot:spring-boot-devtools:2.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.4.2" level="project" />
