@@ -5,6 +5,12 @@
 "sendEmail":"N",
 "commDL":"karanamshyam.sunder@kingfisher.com",
 "commSubject":"ATG Environment Status at ",
-"commBody":"Please find below ATG environments in Error State and take action accordingly. Ignore if Already taken."
+"commBody":"Please find below ATG environments in Error State and take action accordingly. Ignore if Already taken.",
+  "incrIdxConfig": [
+    {"idxName": "Shipping","postLink": "-ndc-ful01.ghanp.kfplc.com:8040/dyn/admin/nucleus/atg/commerce/textsearch/shipping/schedule/ShippingIncrementalScheduleConfig/?propertyName=enabled"},
+    {"idxName": "Order","postLink": "-ndc-aux02.ghanp.kfplc.com:8090/dyn/admin/nucleus/atg/commerce/textsearch/schedule/OrderIncrementalScheduleConfig/?propertyName=enabled"},
+    {"idxName": "Return","postLink": "-ndc-aux02.ghanp.kfplc.com:8090/dyn/admin/nucleus/atg/commerce/textsearch/returns/schedule/ReturnIncrementalScheduleConfig/?propertyName=enabled"},
+    {"idxName": "Profile","postLink": "-ndc-aux01.ghanp.kfplc.com:8050/dyn/admin/nucleus/atg/userprofiling/textsearch/schedule/ProfileIncrementalScheduleConfig/?propertyName=enabled"}
+  ]
 }
 ]

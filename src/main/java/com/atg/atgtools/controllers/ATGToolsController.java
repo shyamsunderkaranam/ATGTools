@@ -33,6 +33,9 @@ public class ATGToolsController {
 	@Autowired
 	ParallelCallOfSmsMockEmail parallelCallOfSmsMockEmail;
 
+	@Autowired
+	EnableDisableIncrIndexing enableDisableIncrIndexing;
+
 	StopWatch stopWatch= StopWatch.create();
 
 	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
@@ -129,6 +132,22 @@ public class ATGToolsController {
 		stopWatch.start();
 		logger.info("Start Time: "+ LocalDateTime.now());
 		JSONObject tempList= parallelCallOfSmsMockEmail.parallelCall();
+		stopWatch.stop();
+		logger.info("Total time taken: "+stopWatch.toString());
+		stopWatch.reset();
+		return ResponseEntity.ok(tempList);
+	}
+
+	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
+	@RequestMapping(value = {"/enableDisableIncIdx"}, method = RequestMethod.POST)
+	public ResponseEntity<List<JSONObject>> enableDisableIncIdx(@RequestBody JSONObject details) {
+
+		logger.info("Before the toggleEnableDisableIncrIndexing call");
+		logger.info("Start Time: "+ LocalDateTime.now());
+		stopWatch.start();
+		List<JSONObject> tempList=  enableDisableIncrIndexing.toggleEnableDisableIncrIndexing(
+				details.get("environment").toString(),details.get("enabledFlag").toString()
+		);
 		stopWatch.stop();
 		logger.info("Total time taken: "+stopWatch.toString());
 		stopWatch.reset();
