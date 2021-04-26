@@ -1,147 +1,140 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ATG Tools</title>
-    <link rel="stylesheet" href="bulma.min.css">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ATG Tools</title>
+	<link rel="stylesheet" href="bulma.min.css">
 	<script src="angular.min.js" > </script>
 	<script src="app.js" > </script>
-	
-	
-  </head>
-  <body ng-app="ATGToolsApp" ng-controller="ATGToolsController" ng-init="getOverallData()" >
-  
-  
-    <div class="container">
+
+
+</head>
+<body ng-app="ATGToolsApp" ng-controller="ATGToolsController" ng-init="getOverallData()" >
+
+
+<div class="container">
 	<div class="columns">
-	<div class="column is-2">
-		<figure class="image is-128x128">
-		  <img src="KItslogo.jpg">
-		</figure>
+		<div class="column is-2">
+			<figure class="image is-128x128">
+				<img src="./Kingfisher_logo.png">
+			</figure>
+		</div>
+		<div class="column is-7">
+			<section class="section">
+
+
+				<h1 class="title has-text-centered is-3" >
+					ATG Mocks / Feature Toggles Status
+				</h1>
+				<!--<p class="subtitle has-text-centered">
+                    Please find Live status of  <strong>Mocks,SMS,Email Dummy mode </strong> here
+                    style="background: gray"
+                </p>-->
+
+			</section>
+		</div>
 	</div>
-	<div class="column is-7">
-		<section class="section">
-	   
 
-			<h1 class="title has-text-centered is-3" >
-				ATG Mocks / Feature Toggles Status
-			</h1>
-			<!--<p class="subtitle has-text-centered">
-				Please find Live status of  <strong>Mocks,SMS,Email Dummy mode </strong> here
-			</p>-->
+	<div class="block">
 
-		</section>
-  </div>
-  </div>
-
-<div class="block">
-
-  <nav id="navbarBasicExample" class="navbar is-link has-text-centered is-centered">
-  
-
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
+		<nav id="navbarBasicExample" class="navbar is-link has-text-centered is-centered">
 
 
-  <div class="navbar-menu ">
-    <div class="navbar-start">
-		<a class="navbar-item" ng-model="currentTab" ng-repeat="navItem in navigation" ng-if="navItem.display" ng-click="navItem.function()" >
-			{{navItem.view}}
-		</a>
-    
+			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+
+
+			<div class="navbar-menu " id="navbarBasicExample1">
+				<div class="navbar-start">
+					<a class="navbar-item" ng-model="currentTab" ng-repeat="navItem in navigation" ng-if="navItem.display" ng-click="navItem.functionCall()" >
+						{{navItem.view}}
+					</a>
+
+				</div>
+			</div>
+		</nav>
 	</div>
-	</div>
-	</nav>
-	</div>
-	<div class="block" ng-if="!display.overall && loading">
+	<div class="box" ng-if="!display.overall && loading">
 		Loading
-		<progress  class="progress is-medium is-info" max="100">100%</progress> 
+		<progress  class="progress is-medium is-info" max="100">100%</progress>
 	</div>
 	<div class="box" ng-if="display.overall">
-	
+
 		<div class="columns">
 			<div class="column is-11">
-	
+
 				<div class="block">
-				
+
 					<h1 class="title has-text-centered">
 						{{boxHeading}}
 					</h1>
-					
+
 				</div>
 			</div>
-			
+
 			<div class="column is-2">
-			
+
 				<!-- <a class="button is-info" ng-click="currentTab.function()">Refresh{{currentTab}}</a> -->
-			
+
 			</div>
 		</div>
-			
-	
+
+
 		<div class="table-container has-text-centered">
 			<div>
 
 				<section class="section">
 
-					<p class="subtitle is-5 has-text-centered">
+					<p ng-repeat="note in note" class="subtitle is-5 has-text-centered">
 						<strong>{{note}}</strong>
 					</p>
-					<p>
-						<strong>{{note1}}</strong>
-					</p>
-					<p>
-						<strong>{{note2}}</strong>
-					</p>
-					<p>
-						<strong>{{note3}}</strong>
-					</p>
+
 
 				</section>
 			</div>
 			<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 				<!-- Your table content -->
-				
+
 				<tr>
 					<td rowspan=2> </td>
 					<th ng-repeat="tier in resultTiers" colspan={{tier.count}}>{{tier.tier}} Tier</th>
 
 				</tr>
 				<tr>
-					
+
 					<th ng-repeat="env in envs">{{env.environment}}</th>
 
 				</tr>
 				<tr ng-repeat="summary in summary">
 					<th> {{summary.key}}</th>
 					<td ng-repeat="summaryVals in summary.summaryVals">
-						<a class="button is-outlined" ng-href = "{{summaryVals.elink}}" ng-class="{'is-danger': (summaryVals.value == recommendedStates['{{summary.mode}}']) || (summaryVals.value == 'ERROR'),'is-success': (summaryVals.value != recommendedStates['{{summary.mode}}'])}" target="_blank">
-						{{summaryVals.value | stateMeaning}}
+						<a class="button is-outlined" ng-href = "{{summaryVals.elink}}" ng-click="handleSummaryPageClicks(summary.mode)" ng-class="stateColor(summaryVals.value,summary.mode)" target="_blank">
+							{{summaryVals.value | stateMeaning}}
 						</a>
-						
+
 					</td>
-				
+
 				</tr>
-				
+
 			</table>
 
-			  
+
 
 		</div>
 	</div>
-	
+
 	<div class="has-text-centered subtitle is-2" ng-if="!display.overall && errorInGettingData!==''">
-	{{errorInGettingData}}
-	
+		{{errorInGettingData}}
+
 	</div>
-	
-	
 
-    </div>
 
-  </body>
+
+</div>
+
+</body>
 </html>

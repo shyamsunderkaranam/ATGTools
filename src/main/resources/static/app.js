@@ -1,53 +1,69 @@
 var app = angular.module("ATGToolsApp",[]);
-app.controller("ATGToolsController",function($scope,$http){
-	
+app.controller("ATGToolsController",function($scope,$http,$interval){
+
 	$scope.envStates = {};
 	$scope.resultTiers = [];
 	$scope.envs = [];
-	$scope.configuration = { 
-	"display":{"overall": false,"smsFT":false,"mockValues":false,"emailDummyMode":false},
-	"recommendedStates": { "MockValues":"true","EmailDummyModeValues":"false","SmsFeatureToggleValues":"true"},
-	"navigation": [
-	{"view":"Summary","display":true,"function":function(){$scope.getOverallData();}},
-	{"view":"SMS Feature Toggle","display":true,"function":function(){$scope.getTierEnvsAvailability('SmsFeatureToggleValues','SMSFTValue','SMS Feature Toggle States','/atgSMSFTValues',
-	'Please note SMS Feature Toggle Enabled means there is a chance of SMS going out to real mobile numbers');}},
-	{"view":"Mock Status","display":true,"function":function(){$scope.getTierEnvsAvailability('MockValues','mocks','Mock Status','/atgMockValues',
-	'Please note Mocks are Enabled means there is a chance of data being mismatch with other systems');}},
-	{"view":"Email Dummy Mode","display":true,"function":function(){$scope.getTierEnvsAvailability('EmailDummyModeValues','DummyModeValue','Email Dummy Mode values','/dummyMode',
-	'Please note Email Dummy Mode Disabled means there is a chance of Email going out to real email addresses');}}
-	],
-	"reqdMocks": [{"mockKey":"mockPaymentGatewayEnabled"},{"mockKey":"mockVerifoneServiceEnabled"}],
-	"hostAndPort": "http://lnxs0639.ghanp.kfplc.com:9043",
-	"overallDataUri":"/allData",
-	"loggingEnabled":true
+	$scope.configuration = {
+		"display":{"overall": false,"smsFT":false,"mockValues":false,"emailDummyMode":false},
+		"recommendedStates": { "MockValues":"true","EmailDummyModeValues":"false","SmsFeatureToggleValues":"true"},
+		"navigation": [
+			{"view":"Summary","display":true,"keyword":"","functionCall":function(){$scope.getOverallData();}},
+			{"view":"SMS Feature Toggle","display":true,"keyword":"SmsFeatureToggleValues","keyvalue":"SMSFTValue","uri":"/atgSMSFTValues",
+			"functionCall":function(){$scope.getTierEnvsAvailability(1);},
+			"note":"Please note SMS Feature Toggle Enabled means there is a chance of SMS going out to real mobile numbers"
+			,"heading":"SMS Feature Toggle States"},
+			{"view":"Mock Status","display":true,"keyword":"MockValues","keyvalue":"mocks","uri":"/atgMockValues","functionCall":function(){$scope.getTierEnvsAvailability(2);},
+			"note":"Please note Mocks are Enabled means there is a chance of order's data being mismatch with other systems"
+			,"heading":"Mock Status"},
+			{"view":"Email Dummy Mode","display":true,"keyword":"EmailDummyModeValues","keyvalue":"DummyModeValue","uri":"/dummyMode","functionCall":function(){$scope.getTierEnvsAvailability(3);},
+			"note":"Please note Email Dummy Mode Disabled means there is a chance of Email going out to real email addresses"
+			,"heading":"Email Dummy Mode values"}
+		],
+		"reqdMocks": [{"mockKey":"mockPaymentGatewayEnabled"},{"mockKey":"mockVerifoneServiceEnabled"}],
+		"hostAndPort": "http://lnxs0639.ghanp.kfplc.com:9043",
+		"overallDataUri":"/allData",
+		"loggingEnabled":true
 	};
-	
+
 	$scope.display = $scope.configuration.display;
 	$scope.recommendedStates = $scope.configuration.recommendedStates;
 	$scope.navigation = $scope.configuration.navigation;
 	$scope.reqdMocks = $scope.configuration.reqdMocks;
 	$scope.hostAndPort = $scope.configuration.hostAndPort;
-	//$scope.hostAndPort = "http://localhost:9020";
+	// $scope.hostAndPort = "http://localhost:9043";
 	$scope.overallDataUri = $scope.configuration.overallDataUri;
 	$scope.note='';
 	$scope.currentTab = '';
 	$scope.loggingEnabled = $scope.configuration.loggingEnabled;
-	
+
+	$interval(function() {
+                $scope.getOverallData();
+
+        },20000);
+
+	$scope.handleSummaryPageClicks = (mode) => {
+
+		console.log(mode);
+		var idx = $scope.navigation.findIndex(k => mode === k.keyword);
+		$scope.navigation[idx].functionCall();
+	}
+
 	$scope.resetALL = function(){
-		
+
 		$scope.display = {"Overall": false,"smsFT":false,"mockValues":false,"emailDummyMode":false}
 		$scope.boxHeading = "";
 		$scope.summary = [];
-		$scope.note='';
+		$scope.note=[];
 		$scope.loading= false;
 		$scope.errorInGettingData = '';
 		$scope.note1 = "";
         $scope.note2 = "";
         $scope.note3 = "";
-		
-		 
+
+
 	};
-	
+
 	$scope.getOverallData = function(){
 		$scope.resetALL();
 		$scope.loading= true;
@@ -57,48 +73,38 @@ app.controller("ATGToolsController",function($scope,$http){
 				$scope.envStates = response.data;
 				//$scope.envStates = $scope.tmpData();
 				$scope.resultTiers = $scope.getUniqVals($scope.envStates.SmsFeatureToggleValues, "tier");
-				
+
 				$scope.envs = $scope.getUniqVals($scope.envStates.SmsFeatureToggleValues, "environment");
-				
-				
-				
-				//$scope.opcos = $scope.getUniqVals($scope.envStates, "opco");
-				//$scope.smsFeatureToggleVals = angular.copy($scope.envStates.SmsFeatureToggleValues);
+
+
 				$scope.summary = [];
-				
-				$scope.tmpArray = $scope.prepareSummary($scope.envStates.SmsFeatureToggleValues,"SMSFTValue","SmsFeatureToggleValues");
-			
-				if($scope.loggingEnabled) console.log($scope.tmpArray);
-				$scope.summary.push($scope.tmpArray);
+				$scope.note[0] = "Please note ";
+				for (let idx=1; idx < $scope.navigation.length; idx++){
+					if($scope.navigation[idx].display){
+						$scope.tmpArray = $scope.prepareSummary($scope.envStates[$scope.navigation[idx]["keyword"]],$scope.navigation[idx]["keyvalue"],$scope.navigation[idx]["keyword"]);
 
-				$scope.tmpArray = $scope.prepareSummary($scope.envStates.EmailDummyModeValues,"DummyModeValue","EmailDummyModeValues");
-			
-				if($scope.loggingEnabled) console.log($scope.tmpArray);
-				$scope.summary.push($scope.tmpArray);
+						if($scope.loggingEnabled) console.log($scope.tmpArray);
+						$scope.summary.push($scope.tmpArray);
+						let tempNote = $scope.navigation[idx].note;
+						$scope.note[idx] = tempNote.substring(12, tempNote.length);;
+					}
+				}
 
-				$scope.tmpArray = $scope.prepareSummary($scope.envStates.MockValues,"mocks","MockValues");
-			
-				if($scope.loggingEnabled) console.log($scope.tmpArray);
-				$scope.summary.push($scope.tmpArray);
-				if($scope.loggingEnabled) console.log($scope.summary);
-				
 				$scope.boxHeading = "Overall Summary";
 				$scope.loading= false;
 				$scope.display.overall = true;
-				$scope.note = "Please note ";
-				$scope.note1 = "SMS Feature Toggle Enabled means there is a chance of SMS going out to real mobile numbers.";
-				$scope.note2 = "Mocks are Enabled means there is a chance of data being mismatch with other systems.";
-                $scope.note3 = "Email Dummy Mode Disabled means there is a chance of Email going out to real email addresses.";
+
 
 			}, function failureCallback(response){
 				$scope.loading= false;
+				console.log(response);
 				$scope.errorInGettingData = 'Error occurred while fetching the data. Please try after sometime or contact support team';
 			});
-		
+
 	};
-	
+
 	$scope.prepareSummary = function(resultJSON,key, key2){
-		
+
 		$scope.enabledData =[];
 		if($scope.loggingEnabled) console.log(resultJSON);
 		if(key !== "mocks")
@@ -125,16 +131,16 @@ app.controller("ATGToolsController",function($scope,$http){
 			}
 		}
 		if($scope.loggingEnabled) console.log($scope.enabledData);
-			
+
 		$scope.tmp2 = {};
 		$scope.tmpArray = [];
 		$scope.tmp2["key"] = angular.copy(key2);
 		$scope.tmp2["mode"] = angular.copy(key2);
-		
+
 		for (var j=0; j<$scope.envs.length; j++){
 			$scope.tmp = {};
-			
-			
+
+
 			$scope.tmpKey = 'false';
 			$scope.tmpEnv = angular.copy($scope.envs[j].environment);
 			for (var k=0; k<$scope.enabledData.length; k++){
@@ -146,16 +152,16 @@ app.controller("ATGToolsController",function($scope,$http){
 					break;
 				}
 			}
-			
+
 			$scope.tmp.env = angular.copy($scope.tmpEnv);
 			//$scope.tmp.tier = $scope.tmpTiers;
-			
+
 			$scope.tmp["value"] = angular.copy($scope.tmpKey);
 			$scope.tmpArray.push($scope.tmp);
-		
+
 		}
 		$scope.tmp2.summaryVals = angular.copy($scope.tmpArray);
-		
+
 		for (var i =0 ; i< $scope.resultTiers.length; i++){
 			var envCount = 0
 			for (var j =0 ; j< $scope.envs.length; j++){
@@ -164,25 +170,32 @@ app.controller("ATGToolsController",function($scope,$http){
 						envCount++;
 						break;
 					}
-						
+
 				}
-				
+
 				$scope.resultTiers[i].count= angular.copy(envCount);
-				
+
 			}
-			
+
 		}
 		return $scope.tmp2;
-		
+
 	}
-	
-	$scope.getTierEnvsAvailability = function(mode,key,heading,uri,note){
-		
+
+	$scope.getTierEnvsAvailability = function(idx){
+
+		const mode = angular.copy($scope.navigation[idx].keyword);
+		const key = angular.copy($scope.navigation[idx].keyvalue);
+		const heading = angular.copy($scope.navigation[idx].heading);
+		const uri = angular.copy($scope.navigation[idx].uri);
+		const note = angular.copy($scope.navigation[idx].note);
+
+
 		$scope.resetALL();
 		$scope.loading= true;
-		
+
 		$scope.personaData=[];
-		
+
 		$scope.apiCallUrl = $scope.hostAndPort + uri;
 		if($scope.loggingEnabled) console.log($scope.apiCallUrl);
  		 $http.get($scope.apiCallUrl)
@@ -190,10 +203,10 @@ app.controller("ATGToolsController",function($scope,$http){
 				$scope.envStates = response.data;
 				//$scope.tmp = $scope.tmpData();
 				//$scope.envStates = angular.copy($scope.tmp[mode]);
-				if($scope.loggingEnabled) console.log($scope.envStates); 
+				if($scope.loggingEnabled) console.log($scope.envStates);
 				$scope.envs = $scope.getUniqVals($scope.envStates, "environment");
-				
-				
+
+
 				$scope.persData=[];
 				if($scope.loggingEnabled) console.log($scope.envs);
 				if($scope.loggingEnabled) console.log($scope.personas);
@@ -204,7 +217,7 @@ app.controller("ATGToolsController",function($scope,$http){
 					for (var j=0; j<$scope.envStates.length; j++){
 						if($scope.personas[i].persona === $scope.envStates[j].persona){
 							$scope.tmpJson={};
-							
+
 							$scope.tmpJson.value =  angular.copy($scope.envStates[j][key]);
 							$scope.tmpJson.environment =  angular.copy($scope.envStates[j].environment);
 							$scope.tmpJson.elink =  angular.copy($scope.envStates[j].Link);
@@ -224,21 +237,21 @@ app.controller("ATGToolsController",function($scope,$http){
 				//var mockExt = '/nucleus//kf/commerce/mocks/MockConfiguration/?propertyName=';
 				var mockExt = '?propertyName=';
 				for (var i=0;i<$scope.reqdMocks.length; i++){
-					
+
 					var mockData = [];
-					
-					
+
+
 					for (var j=0;j< $scope.envStates.length; j++){
-						
+
 						$scope.tmpJson={};
-						
+
 						if(Array.isArray($scope.envStates[j][key] )){
 							var idx = $scope.envStates[j][key].findIndex(k => k.mockKey === $scope.reqdMocks[i].mockKey);
 							$scope.tmpJson.value =  angular.copy($scope.envStates[j][key][idx]["mockValue"]);
 							$scope.tmpJson.environment =  angular.copy($scope.envStates[j].environment);
 							$scope.tmpJson.elink =  angular.copy($scope.envStates[j][key][idx]["mockURL"]);
 							mockData.push($scope.tmpJson);
-						
+
 						}
 						else if($scope.envStates[j][key] === 'ERROR'){
 							$scope.tmpJson.value =  'ERROR';
@@ -246,42 +259,49 @@ app.controller("ATGToolsController",function($scope,$http){
 							$scope.tmpJson.elink =  angular.copy($scope.envStates[j].Link + mockExt + $scope.reqdMocks[i].mockKey);
 							mockData.push($scope.tmpJson);
 						}
-							
+
 					}
 					$scope.tmpJson2={};
-					
+
 					$scope.tmpJson2.mode = angular.copy(mode);
 					$scope.tmpJson2.key = angular.copy($scope.reqdMocks[i].mockKey);
 					$scope.tmpJson2.summaryVals = angular.copy(mockData);
 					$scope.summary.push($scope.tmpJson2);
-					
-					
+
+
 				}
-				
-				
+
+
 			}
-				
-				
+
+
 			if($scope.loggingEnabled) console.log($scope.summary);
 
 			$scope.boxHeading = angular.copy(heading);
 			$scope.display.overall = true;
 			$scope.loading= false;
-			$scope.note=note;
+			$scope.note[0]=note;
 
 			},function errorCallback(response) {
 				// called asynchronously if an error occurs
 				// or server returns response with an error status.
 				$scope.loading= false;
 				$scope.errorInGettingData = 'Error occurred while fetching the data. Please try after sometime or contact support team';
-				if($scope.loggingEnabled) console.log("Some thing wrong");
-			 }); 
-			
-		
-		
+				console.log("Some thing wrong");
+				console.log(response);
+			 });
 
 	};
-	
+	$scope.stateColor = function(stateValue,reqMode){
+
+		if(stateValue === $scope.recommendedStates[reqMode] || stateValue ==='ERROR' || stateValue === 'error'){
+			return 'is-danger';
+		}
+		if(stateValue !== $scope.recommendedStates[reqMode]){
+			return 'is-success';
+		}
+
+	}
 	$scope.getUniqVals = function(collection, keyname) {
 		// we define our output and keys array;
 		var output = [],
@@ -304,7 +324,7 @@ app.controller("ATGToolsController",function($scope,$http){
 		// any duplicates
 		return output;
 	 };
-	 
+
 	$scope.tmpData = function(){
 		 var tempData = {
 				};
@@ -322,9 +342,10 @@ app.filter('stateMeaning', function() {
 	if(x == 'true') {
 		txt = "Enabled";
 	}
-	if(x == 'ERROR') {
+	if(x == 'ERROR' || x== 'error') {
 		txt = "Not Accessible";
 	}
 	return txt;
 	};
 });
+

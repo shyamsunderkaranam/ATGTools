@@ -137,20 +137,30 @@ public class ATGToolsController {
 		stopWatch.reset();
 		return ResponseEntity.ok(tempList);
 	}
-
-	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
+//, origins = "http://127.0.0.1:8887" ,originPatterns = "*/*"
+	//@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin", origins = "http://127.0.0.1:8887", originPatterns = "*")
+	@CrossOrigin(allowedHeaders = "*", origins = "*")
 	@RequestMapping(value = {"/enableDisableIncIdx"}, method = RequestMethod.POST)
-	public ResponseEntity<List<JSONObject>> enableDisableIncIdx(@RequestBody JSONObject details) {
+	public ResponseEntity<List<JSONObject>> enableDisableIncIndex(@RequestBody JSONObject details) {
 
 		logger.info("Before the toggleEnableDisableIncrIndexing call");
 		logger.info("Start Time: "+ LocalDateTime.now());
-		stopWatch.start();
-		List<JSONObject> tempList=  enableDisableIncrIndexing.toggleEnableDisableIncrIndexing(
-				details.get("environment").toString(),details.get("enabledFlag").toString()
-		);
-		stopWatch.stop();
-		logger.info("Total time taken: "+stopWatch.toString());
-		stopWatch.reset();
+		List<JSONObject> tempList = null;
+		try {
+			stopWatch.start();
+			tempList = enableDisableIncrIndexing.toggleEnableDisableIncrIndexing(
+					details.get("environment").toString(), details.get("enabledFlag").toString()
+			);
+			stopWatch.stop();
+			logger.info("Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+		}catch (Exception e){
+			stopWatch.stop();
+			logger.info("Exception Occured Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+			tempList = null;
+			return ResponseEntity.unprocessableEntity().body(tempList);
+		}
 		return ResponseEntity.ok(tempList);
 	}
 }
