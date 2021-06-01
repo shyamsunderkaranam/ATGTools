@@ -132,6 +132,16 @@ public class MockCheckService {
     public List<JSONObject> getMockValues(List<JSONObject> envLinks){
 
         logger.info(Thread.currentThread().getName() + " Now checking all ATG Environments Mock");
+        mockFilter = new JSONObject();
+        mocksToInclude = new ArrayList<>();
+        JSONArray config = envData.getData(ATG_ENV_CONFIG_FILE);
+        mockFilter = (JSONObject) config.get(2);
+        mocksToInclude = (List<String>)mockFilter.get("mocksToBeIncluded");
+        allowAllMock = mockFilter.get("allowAllMocks").toString();
+
+        logger.info(Thread.currentThread().getName() + " Currently these mocks are configured : "+mocksToInclude);
+        logger.info(Thread.currentThread().getName() + " Currently All mocks are allowed is : "+allowAllMock);
+        logger.info(Thread.currentThread().getName() + " Now checking all ATG Environments Mock");
         List<CompletableFuture<JSONObject>> futures =
                 envLinks.stream()
                         .filter(envObj -> envObj.get("Link").toString().contains("/dyn/admin") &&
