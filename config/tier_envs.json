@@ -326,6 +326,6 @@
   },
   {
     "mocksToBeIncluded": ["mockPaymentGatewayEnabled","mockVerifoneServiceEnabled","mockGetCustomerAPIServiceEnabled"],
-    "allowAllMocks": "Y",
+    "allowAllMocks": "Y"
   }
 ]
