@@ -27,6 +27,7 @@ public class PrepareATGLinksService {
     @Autowired
     private EnvDataDAO envData;
     private String tierName;
+    private final int MAX_AGENT_SILOS = 13;
     //List<JSONObject> agtSilos,backOfc,stfSilos,genLinks;
 
     public String getDesiredLink(JSONObject env, JSONObject persona, String siloNumber) {
@@ -175,7 +176,8 @@ public class PrepareATGLinksService {
         String desiredLink;
 
         if (persona.get("persId").equals("app")) {
-            for (int l = 0; l < (long) atgenv.get("agentsilos"); l++) {
+            //for (int l = 0; l < (long) atgenv.get("agentsilos"); l++) {
+            for (int l = 0; l < MAX_AGENT_SILOS; l++) {
 
                 envStateJSON = new JSONObject();
                 envStateJSON.put("tier", tierName);
@@ -185,10 +187,12 @@ public class PrepareATGLinksService {
                 linkAvailability = 0;
                 try {
                     siloNumber = String.format("%02d", l + 1);
-                    desiredLink = getDesiredLink(atgenv, persona, siloNumber);
-                    envStateJSON.put("persona", persona.get("persona").
-                            toString().concat(siloNumber));
-
+                    desiredLink = "NA";
+                    if (l < (long) atgenv.get("agentsilos")) {
+                        desiredLink = getDesiredLink(atgenv, persona, siloNumber);
+                        envStateJSON.put("persona", persona.get("persona").
+                                toString().concat(siloNumber));
+                    }
                     envStateJSON.put("Link", desiredLink);
 
                     envLinks.add(envStateJSON);
