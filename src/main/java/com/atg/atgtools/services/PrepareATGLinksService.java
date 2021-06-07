@@ -183,16 +183,19 @@ public class PrepareATGLinksService {
                 envStateJSON.put("tier", tierName);
                 envStateJSON.put("environment", atgenv.get("environments").toString());
                 envStateJSON.put("State", linkAvailability);
+                envStateJSON.put("applicable", "Y");
 
                 linkAvailability = 0;
                 try {
                     siloNumber = String.format("%02d", l + 1);
-                    desiredLink = "NA";
-                    if (l < (long) atgenv.get("agentsilos")) {
-                        desiredLink = getDesiredLink(atgenv, persona, siloNumber);
-                        envStateJSON.put("persona", persona.get("persona").
-                                toString().concat(siloNumber));
+                    desiredLink = getDesiredLink(atgenv, persona, siloNumber);
+
+                    if ((l+1) > (long) atgenv.get("agentsilos")) {
+                        envStateJSON.put("applicable", "N");
                     }
+                    envStateJSON.put("persona", persona.get("persona").
+                            toString().concat(siloNumber));
+
                     envStateJSON.put("Link", desiredLink);
 
                     envLinks.add(envStateJSON);
@@ -209,6 +212,7 @@ public class PrepareATGLinksService {
             envStateJSON.put("tier", tierName);
             envStateJSON.put("environment", atgenv.get("environments").toString());
             envStateJSON.put("State", linkAvailability);
+            envStateJSON.put("applicable", "Y");
 
             desiredLink = getDesiredLink(atgenv, persona, "");
             //logger.info(Thread.currentThread().getName() + " In getUrlAvailabilityStats function - TP Conditon: "+desiredLink);
@@ -221,6 +225,7 @@ public class PrepareATGLinksService {
         } // if(persona.get("persId").equals("app") ) else ends here
                         //return (JSONObject)envStateJSON   ;
         })   ;
+
         return envLinks;
     }
 /*

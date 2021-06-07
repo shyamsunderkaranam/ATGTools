@@ -29,26 +29,35 @@ public class EmailDummyModeCheckService {
         CompletableFuture<JSONObject> future = CompletableFuture.supplyAsync(new Supplier<JSONObject>() {
             @Override
             public JSONObject get() {
-                String url = envJSONObject.get("Link").toString().concat(EMAIL_DUMMY_MODE_PROP) ;
+                String baseUrl = envJSONObject.get("Link").toString();
                 JSONObject recordState = new JSONObject(envJSONObject);
-                recordState.put("Link",url);
+                String url = baseUrl.concat(EMAIL_DUMMY_MODE_PROP);
+                recordState.put("Link", url);
+                if(envJSONObject.get("applicable").toString().equalsIgnoreCase("Y")) {
 
-                Document doc;
-                try {
-                    doc = Jsoup.connect(url).get();
+                    Document doc;
 
-
-                    Elements content = doc.getElementsByAttributeValueMatching("style", "white-space:pre") ;
-                    logger.info(Thread.currentThread().getName() + " For url "+url+" Value: "+content.html());
-                    recordState.put("DummyModeValue",content.html());
-                    recordState.remove("State");
+                    try {
+                        doc = Jsoup.connect(url).get();
 
 
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    logger.info(Thread.currentThread().getName() + " For url "+url+" Value: Unable to connect");
-                    //e.printStackTrace();
-                    recordState.put("DummyModeValue","error");
+                        Elements content = doc.getElementsByAttributeValueMatching("style", "white-space:pre");
+                        logger.info(Thread.currentThread().getName() + " For url " + url + " Value: " + content.html());
+                        recordState.put("DummyModeValue", content.html());
+                        recordState.remove("State");
+
+
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        logger.info(Thread.currentThread().getName() + " For url " + url + " Value: Unable to connect");
+                        //e.printStackTrace();
+                        recordState.put("DummyModeValue", "error");
+                        recordState.remove("State");
+
+                    }
+                }
+                else{
+                    recordState.put("DummyModeValue","NA");
                     recordState.remove("State");
 
                 }
@@ -75,6 +84,7 @@ public class EmailDummyModeCheckService {
 
         logger.info(Thread.currentThread().getName()+" Preparing the ATG environment links now");
         List<JSONObject> envLinks = prepareATGLinksService.getAllATGEnvUrls(tierNames);
+        System.out.println(envLinks);
         logger.info(Thread.currentThread().getName() + " Now checking all ATG URLs health");
         List<CompletableFuture<JSONObject>> futures =
                 envLinks.stream()
