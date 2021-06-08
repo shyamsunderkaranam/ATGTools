@@ -30,27 +30,34 @@ public class SmsFeatureToggleCheck {
 		CompletableFuture<JSONObject> future = CompletableFuture.supplyAsync(new Supplier<JSONObject>() {
 			@Override
 			public JSONObject get() {
-				String url = envJSONObject.get("Link").toString().concat(SMSFEATURETOGGLEPATH) ;
+				String baseUrl = envJSONObject.get("Link").toString();
+				String url = baseUrl.concat(SMSFEATURETOGGLEPATH) ;
 				JSONObject recordState = new JSONObject(envJSONObject);
+				recordState.put("Link", url);
+				if(envJSONObject.get("applicable").toString().equalsIgnoreCase("Y")) {
 
-				Document doc;
-				try {
-					doc = Jsoup.connect(url).get();
+					Document doc;
+					try {
+						doc = Jsoup.connect(url).get();
+
+						Elements content = doc.getElementsByAttributeValueMatching("style", "white-space:pre");
+						logger.info(Thread.currentThread().getName() + " For url " + url + " Value: " + content.html());
+						recordState.put("SMSFTValue", content.html());
+
+						recordState.remove("State");
 
 
-					Elements content = doc.getElementsByAttributeValueMatching("style", "white-space:pre") ;
-					logger.info(Thread.currentThread().getName() + " For url "+url+" Value: "+content.html());
-					recordState.put("SMSFTValue",content.html());
-					recordState.put("Link",url);
-					recordState.remove("State");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						logger.info(Thread.currentThread().getName() + " For url " + url + " Value: Unable to connect");
+						//e.printStackTrace();
+						recordState.put("SMSFTValue", "ERROR");
+						recordState.remove("State");
 
-
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					logger.info(Thread.currentThread().getName() + " For url "+url+" Value: Unable to connect");
-					//e.printStackTrace();
-					recordState.put("SMSFTValue","ERROR");
-					recordState.put("Link",url);
+					}
+				}
+				else{
+					recordState.put("SMSFTValue","NA");
 					recordState.remove("State");
 
 				}
