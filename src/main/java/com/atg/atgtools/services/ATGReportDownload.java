@@ -78,10 +78,10 @@ public class ATGReportDownload {
             try {
                 JSch jSch = new JSch();
                 //Session session = jSch.getSession(username, host, port);
-                Session session = jSch.getSession("ksunder-adm", "atg-pvtbquk-ndc-aux01.ghanp.kfplc.com", 22);
+                Session session = jSch.getSession("", "atg-pvtbquk-ndc-aux01.ghanp.kfplc.com", 22);
                 session.setConfig("StrictHostKeyChecking", "no");
                 //session.setPassword(password);
-                session.setPassword("Feb@2019");
+                session.setPassword("");
                 session.connect(15000);
                 Channel channel = session.openChannel("sftp");
                 channel.connect(15000);
