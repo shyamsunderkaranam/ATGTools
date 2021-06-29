@@ -7,17 +7,19 @@
 	<link rel="stylesheet" href="bulma.min.css">
 	<script src="angular.min.js" > </script>
 	<script src="app.js" > </script>
+	<script src = "underscore-min.js" >  </script>
+	<!-- <script src = "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js" >         </script> -->
 
 
 </head>
 <body ng-app="ATGToolsApp" ng-controller="ATGToolsController" ng-init="getOverallData()" >
 
 
-<div class="container">
+<div class="container is-fullhd">
 	<div class="columns">
 		<div class="column is-2">
 			<figure class="image is-128x128">
-				<img src="./Kingfisher_logo.png">
+				<img src="Kingfisher_logo.png">
 			</figure>
 		</div>
 		<div class="column is-7">
@@ -34,6 +36,10 @@
 
 			</section>
 		</div>
+		<div class="column is-3">
+			<p class="subtitle is-6 ">Data will be refreshed in {{countdown}} seconds</p>
+
+		</div>
 	</div>
 
 	<div class="block">
@@ -48,7 +54,7 @@
 			</a>
 
 
-			<div class="navbar-menu " id="navbarBasicExample1">
+			<div class="navbar-menu " id="navbarBasicExample">
 				<div class="navbar-start">
 					<a class="navbar-item" ng-model="currentTab" ng-repeat="navItem in navigation" ng-if="navItem.display" ng-click="navItem.functionCall()" >
 						{{navItem.view}}
@@ -82,22 +88,27 @@
 
 			</div>
 		</div>
+		<div>
 
+
+
+			<section class="section">
+
+
+
+				<p ng-repeat="note in note" class="subtitle is-5 has-text-centered">
+					<strong>{{note}}</strong>
+				</p>
+
+
+			</section>
+		</div>
 
 		<div class="table-container has-text-centered">
-			<div>
 
-				<section class="section">
-
-					<p ng-repeat="note in note" class="subtitle is-5 has-text-centered">
-						<strong>{{note}}</strong>
-					</p>
-
-
-				</section>
-			</div>
 			<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
 				<!-- Your table content -->
+				<thead style="background-color: cornsilk"> <!--cornflowerblue-->
 
 				<tr>
 					<td rowspan=2> </td>
@@ -109,6 +120,8 @@
 					<th ng-repeat="env in envs">{{env.environment}}</th>
 
 				</tr>
+				</thead>
+				<tbody>
 				<tr ng-repeat="summary in summary">
 					<th> {{summary.key}}</th>
 					<td ng-repeat="summaryVals in summary.summaryVals">
@@ -119,6 +132,7 @@
 					</td>
 
 				</tr>
+				</tbody>
 
 			</table>
 

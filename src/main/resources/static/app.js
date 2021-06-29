@@ -31,16 +31,23 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 	$scope.navigation = $scope.configuration.navigation;
 	$scope.reqdMocks = $scope.configuration.reqdMocks;
 	$scope.hostAndPort = $scope.configuration.hostAndPort;
-	// $scope.hostAndPort = "http://localhost:9043";
+	//$scope.hostAndPort = "http://localhost:9043";
 	$scope.overallDataUri = $scope.configuration.overallDataUri;
 	$scope.note='';
 	$scope.currentTab = '';
 	$scope.loggingEnabled = $scope.configuration.loggingEnabled;
+	$scope.countdown = 300;
+
+	$interval(function() {
+		    $scope.countdown = $scope.countdown-1;
+
+
+        },999);
 
 	$interval(function() {
                 $scope.getOverallData();
 
-        },20000);
+        },300000);
 
 	$scope.handleSummaryPageClicks = (mode) => {
 
@@ -76,6 +83,7 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 
 				$scope.envs = $scope.getUniqVals($scope.envStates.SmsFeatureToggleValues, "environment");
 
+				if($scope.loggingEnabled) console.log($scope.envStates);
 
 				$scope.summary = [];
 				$scope.note[0] = "Please note ";
@@ -93,6 +101,7 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 				$scope.boxHeading = "Overall Summary";
 				$scope.loading= false;
 				$scope.display.overall = true;
+				$scope.countdown = 300;
 
 
 			}, function failureCallback(response){
@@ -117,19 +126,57 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 			}
 		}
 		else if(key === "mocks"){
+			var finalMocks=[];
 			for (var i=0,j=0; i<resultJSON.length; i++){
 				/*if($scope.loggingEnabled) console.log(resultJSON);
 				if($scope.loggingEnabled) console.log(key);
 				if($scope.loggingEnabled) console.log(resultJSON[i][key]);*/
+				var tmpArray = [];
+				var tmpObj = angular.copy(resultJSON[i][key]);
+				//console.log(angular.copy(tmpObj));
+				for(let k=0; k<resultJSON[i][key].length;k++){
+
+					if(tmpObj !== undefined && tmpObj !== 'ERROR'){
+
+						delete tmpObj[k].mockURL;
+						delete tmpObj[k].mockValue;
+						tmpArray[0] = tmpObj[k]["mockKey"];
+
+						finalMocks = _.union(finalMocks,[...tmpArray]);
+						//finalMocks = [...new Set(finalMocks,tmpObj)];
+						/*finalMocks = finalMocks.concat(tmpObj).filter(function(o) {
+						  return this.has(o.a) ? false : this.add(o.a);
+						}, new Set());*/
+
+					}
+
+				}
+				//console.log(finalMocks);
 				for(var k=0; k<resultJSON[i][key].length;k++){
+
+
 					if (resultJSON[i][key][k].mockValue === $scope.recommendedStates[key2]){
 						$scope.enabledData[j] = angular.copy(resultJSON[i]);
 						j++;
 						break;
 					}
+
 				}
+
 			}
+			//console.log(finalMocks);
+			let another =[];
+			finalMocks.forEach((element,i) => {
+								  let tmp={};
+								  tmp.mockKey = element;
+								  another.push(tmp);
+			});
+			console.log(another);
+			$scope.reqdMocks = angular.copy(another);
+			another = [];
+			finalMocks = [];
 		}
+
 		if($scope.loggingEnabled) console.log($scope.enabledData);
 
 		$scope.tmp2 = {};
@@ -139,8 +186,6 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 
 		for (var j=0; j<$scope.envs.length; j++){
 			$scope.tmp = {};
-
-
 			$scope.tmpKey = 'false';
 			$scope.tmpEnv = angular.copy($scope.envs[j].environment);
 			for (var k=0; k<$scope.enabledData.length; k++){
@@ -247,10 +292,18 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 
 						if(Array.isArray($scope.envStates[j][key] )){
 							var idx = $scope.envStates[j][key].findIndex(k => k.mockKey === $scope.reqdMocks[i].mockKey);
-							$scope.tmpJson.value =  angular.copy($scope.envStates[j][key][idx]["mockValue"]);
-							$scope.tmpJson.environment =  angular.copy($scope.envStates[j].environment);
-							$scope.tmpJson.elink =  angular.copy($scope.envStates[j][key][idx]["mockURL"]);
-							mockData.push($scope.tmpJson);
+							if(idx !== -1){
+								$scope.tmpJson.value =  angular.copy($scope.envStates[j][key][idx]["mockValue"]);
+								$scope.tmpJson.environment =  angular.copy($scope.envStates[j].environment);
+								$scope.tmpJson.elink =  angular.copy($scope.envStates[j][key][idx]["mockURL"]);
+								mockData.push($scope.tmpJson);
+							}
+							if(idx == -1){
+								$scope.tmpJson.value =  'NA';
+								$scope.tmpJson.environment =  angular.copy($scope.envStates[j].environment);
+								$scope.tmpJson.elink =  'NA';
+								mockData.push($scope.tmpJson);
+							}
 
 						}
 						else if($scope.envStates[j][key] === 'ERROR'){
@@ -297,9 +350,13 @@ app.controller("ATGToolsController",function($scope,$http,$interval){
 		if(stateValue === $scope.recommendedStates[reqMode] || stateValue ==='ERROR' || stateValue === 'error'){
 			return 'is-danger';
 		}
+		if(stateValue == 'NA'){
+			return 'is-info';
+		}
 		if(stateValue !== $scope.recommendedStates[reqMode]){
 			return 'is-success';
 		}
+
 
 	}
 	$scope.getUniqVals = function(collection, keyname) {
@@ -345,6 +402,10 @@ app.filter('stateMeaning', function() {
 	if(x == 'ERROR' || x== 'error') {
 		txt = "Not Accessible";
 	}
+	if(x=='NA'){
+		txt = "Not Applicable";
+	}
+
 	return txt;
 	};
 });
