@@ -57,11 +57,14 @@ public class ATGToolsController {
 
 		logger.info("Before the getATGEnvsStatsJSON call");
 		logger.info("Start Time: "+ LocalDateTime.now());
-		stopWatch.start();
+		if (stopWatch.isStopped())
+			stopWatch.start();
 		List<JSONObject> tempList=  healthCheckATG.getAllATGEnvUrls(tier);
-		stopWatch.stop();
-		logger.info("Total time taken: "+stopWatch.toString());
-		stopWatch.reset();
+		if(stopWatch.isStarted()) {
+			stopWatch.stop();
+			logger.info("Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+		}
 		return ResponseEntity.ok(tempList);
 	}
 
@@ -77,11 +80,14 @@ public class ATGToolsController {
 
 		logger.info("Before the generateEmailDummyModeValues call");
 		logger.info("Start Time: "+ LocalDateTime.now());
-		stopWatch.start();
+		if (stopWatch.isStopped())
+			stopWatch.start();
 		List<JSONObject> tempList=  emailDummyModeCheckService.generateEmailDummyModeValues(tier);
-		stopWatch.stop();
-		logger.info("Total time taken: "+stopWatch.toString());
-		stopWatch.reset();
+		if(stopWatch.isStarted()) {
+			stopWatch.stop();
+			logger.info("Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+		}
 		return ResponseEntity.ok(tempList);
 	}
 
@@ -96,11 +102,14 @@ public class ATGToolsController {
 			tier = tierName.toString();
 		logger.info("Before the generateSMSFeatureToggleValues call For tier: "+tier);
 		logger.info("Start Time: "+ LocalDateTime.now());
-		stopWatch.start();
+		if (stopWatch.isStopped())
+			stopWatch.start();
 		List<JSONObject> tempList=  smsFeatureToggleCheck.generateSMSFeatureToggleValues(tier);
-		stopWatch.stop();
-		logger.info("Total time taken: "+stopWatch.toString());
-		stopWatch.reset();
+		if(stopWatch.isStarted()) {
+			stopWatch.stop();
+			logger.info("Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+		}
 		return ResponseEntity.ok(tempList);
 	}
 
@@ -114,12 +123,16 @@ public class ATGToolsController {
 		else
 			tier = tierName.toString();
 		logger.info("Before the getMockValues call");
-		stopWatch.start();
+		if (stopWatch.isStopped())
+			stopWatch.start();
 		logger.info("Start Time: "+ LocalDateTime.now());
 		List<JSONObject> tempList= mockCheckService.getMockValues(tier);
-		stopWatch.stop();
-		logger.info("Total time taken: "+stopWatch.toString());
-		stopWatch.reset();
+		if(stopWatch.isStarted()) {
+			stopWatch.stop();
+			logger.info("Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+		}
+		logger.info("End Time: "+ LocalDateTime.now());
 		return ResponseEntity.ok(tempList);
 	}
 
@@ -129,12 +142,15 @@ public class ATGToolsController {
 		String tier = "All";
 
 		logger.info("Before the getting all stats call");
-		stopWatch.start();
+		if (stopWatch.isStopped())
+			stopWatch.start();
 		logger.info("Start Time: "+ LocalDateTime.now());
 		JSONObject tempList= parallelCallOfSmsMockEmail.parallelCall();
-		stopWatch.stop();
-		logger.info("Total time taken: "+stopWatch.toString());
-		stopWatch.reset();
+		if(stopWatch.isStarted()) {
+			stopWatch.stop();
+			logger.info("Total time taken: " + stopWatch.toString());
+			stopWatch.reset();
+		}
 		return ResponseEntity.ok(tempList);
 	}
 //, origins = "http://127.0.0.1:8887" ,originPatterns = "*/*"
@@ -147,13 +163,16 @@ public class ATGToolsController {
 		logger.info("Start Time: "+ LocalDateTime.now());
 		List<JSONObject> tempList = null;
 		try {
-			stopWatch.start();
+			if (stopWatch.isStopped())
+				stopWatch.start();
 			tempList = enableDisableIncrIndexing.toggleEnableDisableIncrIndexing(
 					details.get("environment").toString(), details.get("enabledFlag").toString()
 			);
-			stopWatch.stop();
-			logger.info("Total time taken: " + stopWatch.toString());
-			stopWatch.reset();
+			if(stopWatch.isStarted()) {
+				stopWatch.stop();
+				logger.info("Total time taken: " + stopWatch.toString());
+				stopWatch.reset();
+			}
 		}catch (Exception e){
 			stopWatch.stop();
 			logger.info("Exception Occured Total time taken: " + stopWatch.toString());
