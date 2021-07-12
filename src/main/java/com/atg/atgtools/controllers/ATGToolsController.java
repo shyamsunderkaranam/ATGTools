@@ -116,12 +116,15 @@ public class ATGToolsController {
 	@CrossOrigin(allowedHeaders = "Access-Control-Allow-Origin")
 	@RequestMapping(value = {"/atgMockValues","/atgMockValues/{tierName}"}, method = RequestMethod.GET)
 	public ResponseEntity<List<JSONObject>> getMockValues(@PathVariable(value = "tierName",required = false) String tierName) {
+		//mockCheckService = new MockCheckService() ;
 		String tier = "All";
 		if(tierName==null || tierName.equals(null) || tierName.equals("")){
 			tier = "All";
 			logger.info("Not passed any tier parameter / not populated properly");}
-		else
+		else {
 			tier = tierName.toString();
+			logger.info("Tier name from parameter: {}",tier);
+		}
 		logger.info("Before the getMockValues call");
 		if (stopWatch.isStopped())
 			stopWatch.start();

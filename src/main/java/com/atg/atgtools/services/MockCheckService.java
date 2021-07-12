@@ -52,6 +52,7 @@ public class MockCheckService {
                 url= url.concat(MOCKURLPATH);
                 mockJSONObject.put("Link",url);
                 doc = Jsoup.connect(url).get();
+                String currentTier = mockJSONObject.get("tier").toString();
                 Element table = doc.select("table").get(0);
                 Elements rows = table.select("tr");
                 JSONArray mockJSONArray = new JSONArray();
@@ -68,7 +69,7 @@ public class MockCheckService {
                             (allowAllMock.equalsIgnoreCase("Y") ||
                                     mocksToInclude.contains(mockProperty)))
                     {
-                        logger.info("URL: {} Mock Property {} : Mock Value {}", url, mockProperty, mockValue);
+                        logger.info("Tier: {} URL: {} Mock Property {} : Mock Value {}", currentTier, url, mockProperty, mockValue);
                         mockJSONPropObject.put("mockKey", mockProperty);
                         mockJSONPropObject.put("mockValue", mockValue);
                         mockJSONPropObject.put("mockURL", url.concat("/?propertyName=").concat(mockProperty));
@@ -100,8 +101,8 @@ public class MockCheckService {
     }
 
     public List<JSONObject> getMockValues(String tierNames){
-        logger.info(Thread.currentThread().getName()+" Preparing the ATG environment Mock URLs now");
-        List<JSONObject> envLinks = prepareATGLinksService.getAllATGEnvUrls(tierNames);
+        logger.info(Thread.currentThread().getName()+" Preparing the ATG environment Mock URLs now for tier: "+tierNames);
+        List<JSONObject> envLinks = new ArrayList<JSONObject>(prepareATGLinksService.getAllATGEnvUrls(tierNames));
         mockFilter = new JSONObject();
         mocksToInclude = new ArrayList<>();
         JSONArray config = envData.getData(ATG_ENV_CONFIG_FILE);
@@ -112,6 +113,7 @@ public class MockCheckService {
         logger.info(Thread.currentThread().getName() + " Currently these mocks are configured : "+mocksToInclude);
         logger.info(Thread.currentThread().getName() + " Currently All mocks are allowed is : "+allowAllMock);
         logger.info(Thread.currentThread().getName() + " Now checking all ATG Environments Mock");
+        logger.info(Thread.currentThread().getName() + "And the environment links are "+ envLinks);
         List<CompletableFuture<JSONObject>> futures =
                 envLinks.stream()
                         .filter(envObj -> envObj.get("Link").toString().contains("/dyn/admin") &&

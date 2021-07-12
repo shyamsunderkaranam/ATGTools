@@ -145,7 +145,7 @@ public class PrepareATGLinksService {
 
         List<List> tempListObject=  ((Stream<JSONObject>) stream)
         .filter(envt -> ("N".equalsIgnoreCase(envt.get("excludeHealthCheck").toString())))
-                .map(atgenvt -> createPersonaDetailsFromEnv(atgenvt))
+                .map(atgenvt -> createPersonaDetailsFromEnv(atgenvt,tierName))
                 .parallel()
                 .collect(Collectors.toList())
                ;
@@ -158,13 +158,13 @@ public class PrepareATGLinksService {
 
     }
 
-    public List createPersonaDetailsFromEnv(Object atgenvt){
+    public List createPersonaDetailsFromEnv(Object atgenvt, String tier){
         JSONArray personas = (JSONArray) personaJSONObject.get("personas");
         logger.info("In createPersonaDetailsFromEnv ");
         List<JSONObject> envLinks = new ArrayList<>();
         personas.forEach(persona1 -> {
 
-            JSONObject persona = (JSONObject) persona1;
+        JSONObject persona = (JSONObject) persona1;
         String siloNumber = "";
         JSONObject atgenv = (JSONObject) atgenvt;
         
@@ -180,7 +180,7 @@ public class PrepareATGLinksService {
             for (int l = 0; l < MAX_AGENT_SILOS; l++) {
 
                 envStateJSON = new JSONObject();
-                envStateJSON.put("tier", tierName);
+                envStateJSON.put("tier", tier);
                 envStateJSON.put("environment", atgenv.get("environments").toString());
                 envStateJSON.put("State", linkAvailability);
                 envStateJSON.put("applicable", "Y");
@@ -209,7 +209,7 @@ public class PrepareATGLinksService {
         } else if(!(atgenv.get("tradepoint").equals("NA") && persona.get("persId").toString().equalsIgnoreCase("Tradepoint"))) {
 
             envStateJSON = new JSONObject();
-            envStateJSON.put("tier", tierName);
+            envStateJSON.put("tier", tier);
             envStateJSON.put("environment", atgenv.get("environments").toString());
             envStateJSON.put("State", linkAvailability);
             envStateJSON.put("applicable", "Y");
